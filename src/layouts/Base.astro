@@ -1,0 +1,69 @@
+---
+import '../styles/global.css';
+import { site } from '../data/site.js';
+import Consent from '../components/Consent.astro';
+
+interface Props {
+  title?: string;
+  description?: string;
+  path?: string;
+  jsonLd?: object[];
+  noindex?: boolean;
+}
+const { title = site.title, description = site.description, path = '/', jsonLd = [], noindex = false } = Astro.props;
+const canonical = new URL(path, site.url).href;
+const ogImage = new URL('/og.jpg', site.url).href;
+const tracking = Boolean(site.gaId || site.googleAdsId);
+---
+<!doctype html>
+<html lang="cs">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {noindex ? <meta name="robots" content="noindex, follow" /> : <meta name="robots" content="index, follow, max-image-preview:large" />}
+    <meta name="author" content={site.name} />
+    <meta name="theme-color" content="#111111" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="cs_CZ" />
+    <meta property="og:site_name" content={`${site.name} – ${site.role}`} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Jan Syblík – realitní makléř" />
+    <meta name="twitter:card" content="summary_large_image" />
+    {site.googleSiteVerification && <meta name="google-site-verification" content={site.googleSiteVerification} />}
+
+    {jsonLd.map((data) => <script type="application/ld+json" set:html={JSON.stringify(data)} />)}
+
+    {tracking && (
+      <script is:inline define:vars={{ gaId: site.gaId, adsId: site.googleAdsId }}>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        window.gtag = gtag;
+        // Režim souhlasu: dokud návštěvník nesouhlasí, nic se neukládá.
+        gtag('consent', 'default', { ad_storage: 'denied', ad_user_data: 'denied', ad_personalization: 'denied', analytics_storage: 'denied', wait_for_update: 500 });
+        gtag('js', new Date());
+        if (gaId) gtag('config', gaId);
+        if (adsId) gtag('config', adsId);
+        var s = document.createElement('script'); s.async = true;
+        s.src = 'https://www.googletagmanager.com/gtag/js?id=' + (gaId || adsId);
+        document.head.appendChild(s);
+      </script>
+    )}
+  </head>
+  <body>
+    <a class="skip" href="#obsah">Přeskočit na obsah</a>
+    <slot />
+    <Consent />
+  </body>
+</html>

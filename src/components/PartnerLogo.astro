@@ -1,0 +1,23 @@
+---
+// Loga partnerů. Barvy se řídí proměnnými --pl-main a --pl-accent (světlá/tmavá verze).
+interface Props { logo: string; nazev: string; }
+const { logo, nazev } = Astro.props;
+---
+{logo === 'pasportstaveb' ? (
+  <span class="pl-pasport" aria-hidden="true">
+    <svg viewBox="0 0 64 64"><path d="M12 30 L32 10 L52 30 V54 H12 Z" fill="none" stroke="currentColor" stroke-width="7" /></svg>
+    <span class="pl-pasport__text"><span class="pl-pasport__name">Pasport<b>staveb</b></span><span class="pl-pasport__kota"></span></span>
+  </span>
+) : <span class="pl-text">{nazev}</span>}
+
+<style>
+  .pl-pasport { display: inline-flex; align-items: center; gap: 8px; color: var(--pl-main, #0c3a57); }
+  .pl-pasport svg { width: 30px; height: 30px; }
+  .pl-pasport__text { display: grid; gap: 3px; }
+  .pl-pasport__name { font-family: Archivo, 'Arial Narrow', Arial, sans-serif; font-size: 20px; letter-spacing: -0.03em; line-height: 1.1; }
+  .pl-pasport__name b { font-weight: 800; }
+  .pl-pasport__kota { position: relative; display: block; height: 2px; background: var(--pl-accent, #2c6e9b); margin: 0 2px; }
+  .pl-pasport__kota::before, .pl-pasport__kota::after { content: ''; position: absolute; top: -3px; width: 2px; height: 8px; background: var(--pl-accent, #2c6e9b); transform: rotate(45deg); }
+  .pl-pasport__kota::before { left: 0; } .pl-pasport__kota::after { right: 0; }
+  .pl-text { font-weight: 700; font-size: 17px; color: var(--pl-main, #111); }
+</style>

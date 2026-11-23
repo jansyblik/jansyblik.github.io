@@ -1,0 +1,65 @@
+[
+  {
+    "id": "6558",
+    "title": "Prodej prostorného bytu 2+kk, 68 m², Hořovice",
+    "price": "4 950 000 Kč",
+    "location": "okr. Beroun - Hořovice",
+    "url": "https://www.domov-beroun.cz/reality/prodej-prostorneho-bytu-2-kk-68-m-horovice-6558/",
+    "image": "https://www.domov-beroun.cz/poskireal-data/domovberoun/temp/img/poskireal-data/domovberoun/data/zs/foto/6558/600x450-scalecrop-ke/byt-2-kk-26-1-of-1.png",
+    "reserved": false
+  },
+  {
+    "id": "6538",
+    "title": "Prodej stavebního pozemku 878 m², Pičín",
+    "price": "2 625 220 Kč",
+    "location": "okr. Příbram - Pičín",
+    "url": "https://www.domov-beroun.cz/reality/prodej-stavebniho-pozemku-878-m-picin-6538/",
+    "image": "https://www.domov-beroun.cz/poskireal-data/domovberoun/temp/img/poskireal-data/domovberoun/data/zs/foto/6538/600x450-scalecrop-ke/pozemek-picin-3-1-of-1.jpg",
+    "reserved": false
+  },
+  {
+    "id": "6528",
+    "title": "Prodej stavebního pozemku se zemědělskou parcelou 3 856 m², Běštín",
+    "price": "3 990 000 Kč",
+    "location": "okr. Beroun - Běštín",
+    "url": "https://www.domov-beroun.cz/reality/prodej-stavebniho-pozemku-se-zemedelskou-parcelou-3-856-m-bestin-6528/",
+    "image": "https://www.domov-beroun.cz/poskireal-data/domovberoun/temp/img/poskireal-data/domovberoun/data/zs/foto/6528/600x450-scalecrop-ke/pozemek-8-1-of-1.jpg",
+    "reserved": false
+  },
+  {
+    "id": "6523",
+    "title": "Prodej rodinného domu 4+1, 121 m², se zahradou a garáží – Hořovice",
+    "price": "5 590 000 Kč",
+    "location": "okr. Beroun - Hořovice",
+    "url": "https://www.domov-beroun.cz/reality/prodej-rodinneho-domu-4-1-121-m-se-zahradou-a-garazi-horovice-6523/",
+    "image": "https://www.domov-beroun.cz/poskireal-data/domovberoun/temp/img/poskireal-data/domovberoun/data/zs/foto/6523/600x450-scalecrop-ke/dji-20260917154406-0202-dupr-logo.png.jpg",
+    "reserved": false
+  },
+  {
+    "id": "6495",
+    "title": "Rekreační chata v Hýskově na pozemku 394 m² s terasou, výhledem a vzrostlou zahradou",
+    "price": "2 090 000 Kč",
+    "location": "okr. Beroun - Hýskov",
+    "url": "https://www.domov-beroun.cz/reality/rekreacni-chata-v-hyskove-na-pozemku-394-m-s-terasou-vyhledem-a-vzrostlou-zahradou-6495/",
+    "image": "https://www.domov-beroun.cz/poskireal-data/domovberoun/temp/img/poskireal-data/domovberoun/data/zs/foto/6495/600x450-scalecrop-ke/dji-20240505181146-0589-d-1.jpg",
+    "reserved": true
+  },
+  {
+    "id": "6442",
+    "title": "Prodej rodinného domu 4+1, 177 m², Nahořany",
+    "price": "8 500 000 Kč",
+    "location": "okr. Náchod - Nahořany",
+    "url": "https://www.domov-beroun.cz/reality/prodej-rodinneho-domu-4-1-177-m-nahorany-6442/",
+    "image": "https://www.domov-beroun.cz/poskireal-data/domovberoun/temp/img/poskireal-data/domovberoun/data/zs/foto/6442/600x450-scalecrop-ke/nahorany32.jpeg",
+    "reserved": false
+  },
+  {
+    "id": "6447",
+    "title": "Prodej chaty 38 m², Podkozí",
+    "price": "1 890 000 Kč",
+    "location": "okr. Beroun - Chyňava",
+    "url": "https://www.domov-beroun.cz/reality/prodej-chaty-38m2-podkozi-6447/",
+    "image": "https://www.domov-beroun.cz/poskireal-data/domovberoun/temp/img/poskireal-data/domovberoun/data/zs/foto/6447/600x450-scalecrop-ke/chata-uvod.png.jpg",
+    "reserved": false
+  }
+]

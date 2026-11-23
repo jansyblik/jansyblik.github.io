@@ -1,0 +1,73 @@
+---
+import logo from '../assets/logo/logo-bila.svg?raw';
+import Icon from './Icon.astro';
+import { site } from '../data/site.js';
+const nav = [
+  { href: '/#sluzby', label: 'Služby' },
+  { href: '/#nabidky', label: 'Nabídka' },
+  { href: '/#o-mne', label: 'O mně' },
+  { href: '/#kontakt', label: 'Kontakt' },
+];
+---
+<header class="header">
+  <div class="wrap header__inner">
+    <a href="/" class="header__logo" aria-label="Jan Syblík – realitní makléř, úvodní stránka" set:html={logo} />
+    <nav class="header__nav" aria-label="Hlavní menu">
+      {nav.map((n) => <a href={n.href}>{n.label}</a>)}
+    </nav>
+    <div class="header__cta">
+      <a class="header__phone" href={site.phoneHref}><Icon name="phone" /><span>{site.phoneShort}</span></a>
+      <a class="btn btn--primary header__btn" href="/#kontakt" data-volba="Ocenění zdarma">Ocenění zdarma</a>
+    </div>
+    <details class="header__menu">
+      <summary aria-label="Otevřít menu"><Icon name="menu" /></summary>
+      <nav aria-label="Menu pro mobil">
+        {nav.map((n) => <a href={n.href}>{n.label}</a>)}
+        <a class="btn btn--primary" href="/#kontakt" data-volba="Ocenění zdarma">Ocenění zdarma</a>
+      </nav>
+    </details>
+  </div>
+</header>
+
+<script is:inline>
+  document.addEventListener('click', function (e) {
+    var m = document.querySelector('.header__menu');
+    if (m && m.open && e.target.closest('.header__menu nav a')) m.open = false;
+  });
+</script>
+
+<style>
+  .header { position: sticky; top: 0; z-index: 50; background: rgba(22,22,22,.96); backdrop-filter: saturate(1.4) blur(8px); border-bottom: 1px solid #262626; }
+  .header__inner { display: flex; align-items: center; gap: 28px; min-height: 76px; }
+  .header__logo { display: block; width: 196px; flex: none; }
+  .header__logo :global(svg) { width: 100%; height: auto; display: block; }
+  .header__nav { display: flex; gap: 26px; margin-left: auto; }
+  .header__nav a, .header__phone { text-decoration: none; font-weight: 600; font-size: 15px; color: #e6e6e6; }
+  .header__nav a:hover, .header__phone:hover { color: #fff; text-decoration: underline; text-underline-offset: 6px; }
+  .header__cta { display: flex; align-items: center; gap: 18px; }
+  .header__phone { display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; }
+  .header__phone :global(svg) { width: 18px; height: 18px; }
+  @media (min-width: 721px) {
+    .header__phone { font-weight: 700; color: #fff; padding-left: 18px; border-left: 1px solid #3a3a3a; }
+    .header__phone :global(svg) { color: #7b97ff; }
+  }
+  .header__btn { min-height: 44px; padding: 0 18px; font-size: 15px; }
+  .header__menu { display: none; position: relative; }
+  .header__menu summary { list-style: none; cursor: pointer; width: 44px; height: 44px; display: grid; place-items: center; border: 1px solid #3a3a3a; border-radius: var(--radius); color: #fff; }
+  .header__menu summary::-webkit-details-marker { display: none; }
+  .header__menu summary :global(svg) { width: 22px; height: 22px; }
+  .header__menu nav { color: var(--text); position: absolute; right: 0; top: 54px; width: min(300px, calc(100vw - 32px)); background: var(--panel); border: 1px solid var(--line); border-radius: 6px; box-shadow: 0 16px 40px rgba(0,0,0,.12); padding: 12px; display: grid; gap: 4px; }
+  .header__menu nav a:not(.btn) { padding: 12px 10px; text-decoration: none; font-weight: 600; border-radius: var(--radius); }
+  .header__menu nav a:not(.btn):hover { background: var(--panel-2); }
+  .header__menu nav .btn { margin-top: 8px; }
+
+  @media (max-width: 1080px) { .header__nav { display: none; } .header__cta { margin-left: auto; } }
+  @media (max-width: 720px) {
+    .header__inner { gap: 12px; min-height: 64px; }
+    .header__logo { width: 156px; }
+    .header__btn { display: none; }
+    .header__phone span { display: none; }
+    .header__phone { width: 44px; height: 44px; justify-content: center; border: 1px solid #3a3a3a; border-radius: var(--radius); }
+    .header__menu { display: block; }
+  }
+</style>

@@ -1,0 +1,482 @@
+---
+import { Picture } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import ContactForm from '../components/ContactForm.astro';
+import Icon from '../components/Icon.astro';
+import { site } from '../data/site.js';
+import { faq } from '../data/faq.js';
+import { getListings } from '../lib/listings.js';
+import { oblasti } from '../data/oblasti.js';
+import { recenze } from '../data/recenze.js';
+import MobileBar from '../components/MobileBar.astro';
+
+import portrait from '../assets/foto/jan-syblik-vyrez.png';
+import domovLogo from '../assets/logo/domov.png';
+
+const { items: listings } = await getListings();
+
+const services = [
+  { t: 'Prodej nemovitosti', d: 'Prodávám byty, domy a pozemky v Berouně, Praze, Kladně, Hořovicích a okolí – rychle a za nejvyšší možnou cenu. Postarám se, aby byl pro vás celý proces bez starostí.' },
+  { t: 'Ocenění zdarma', d: 'Řeknu vám, za kolik se vaše nemovitost reálně prodá. Vycházím z cen realizovaných obchodů ve vašem okolí. Ocenění je nezávazné.', link: { text: 'Chci ocenění', volba: 'Ocenění zdarma' } },
+  { t: 'Příprava k prodeji', d: 'Vím, na koho se obrátit, a zařídím vše, co je před prodejem potřeba – revize a dokumentaci, jednání s bankou o hypotéce, malování a drobné úpravy i nesoulad se zápisem na katastru.' },
+  { t: 'Prezentace a marketing', d: 'Profesionální prezentace, inzerce na všech realitních portálech a aktivní marketing na sociálních sítích. Každého zájemce se snažím poznat a kupujícím pomohu zajistit hypotéku.' },
+  { t: 'Bezpečné smlouvy', d: 'Smluvní dokumentaci připraví náš právník a kupní cena je až do převodu bezpečně uložená v advokátní úschově. Předání nemovitosti zajistím a pomohu i s přepisem energií.' },
+  { t: 'Složité případy', d: 'Dědictví, spoluvlastnictví nebo několik prodejů, které na sebe navazují. Pomohu je sladit a správně právně ošetřit. S podobnými situacemi mám zkušenosti.' },
+]
+
+// Odkazy na stránky oblastí přímo v textu služby „Prodej nemovitosti“.
+const mesta = { 'Berouně': '/prodej-nemovitosti-beroun/', 'Praze': '/prodej-bytu-praha/', 'Kladně': '/prodej-bytu-kladno/', 'Hořovicích': '/prodej-nemovitosti-horovice/' };
+const sOdkazy = (t) => t.split(/(Berouně|Praze|Kladně|Hořovicích)/).map((x) => (mesta[x] ? { text: x, href: mesta[x] } : { text: x }));
+const nadpisOdkazy = { 'Ocenění zdarma': '/odhad-ceny-nemovitosti/' };
+
+const reasons = [
+  { t: 'Spolehlivost a otevřenost', d: 'Co slíbím, platí. O každém kroku prodeje víte včas a bez zbytečných překvapení.' },
+  { t: 'Důkladná příprava', d: 'Všechno podstatné řeším hned na začátku, aby nás později nic nepřekvapilo. Dobře připravený prodej pak probíhá hladce.' },
+  { t: 'Moderní prezentace', d: 'Využívám moderní technologie, díky kterým vaše nemovitost osloví víc zájemců.' },
+];
+
+const agent = {
+  '@context': 'https://schema.org',
+  '@type': 'RealEstateAgent',
+  '@id': site.url + '/#makler',
+  name: 'Jan Syblík – realitní makléř',
+  url: site.url + '/',
+  image: site.url + '/og.jpg',
+  logo: site.url + '/apple-touch-icon.png',
+  telephone: site.phone,
+  email: site.email,
+  description: site.description,
+  areaServed: ['Beroun', 'Berounsko', 'Králův Dvůr', 'Zdice', 'Hořovice', 'Kladno', 'Praha', 'Praha 5', 'Praha 6', 'Praha 13', 'Stodůlky', 'Zličín', 'Praha-západ'].map((n) => ({ '@type': 'Place', name: n })),
+  parentOrganization: { '@type': 'RealEstateAgent', name: site.domov.name, url: site.domov.url, foundingDate: String(site.domov.since) },
+  sameAs: [site.domov.profile],
+  founder: { '@type': 'Person', name: 'Jan Syblík', jobTitle: 'Realitní makléř', worksFor: { '@type': 'RealEstateAgent', name: site.domov.name, url: site.domov.url } },
+  knowsAbout: ['prodej bytu', 'prodej rodinného domu', 'prodej pozemku', 'ocenění nemovitosti', 'prodej zděděné nemovitosti', 'prodej nemovitosti s hypotékou', 'navazující prodeje'],
+};
+const website = { '@context': 'https://schema.org', '@type': 'WebSite', name: 'Jan Syblík – realitní makléř', url: site.url + '/', inLanguage: 'cs' };
+const faqLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faq.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+};
+---
+<Base jsonLd={[agent, website, faqLd]}>
+  <Header />
+  <main id="obsah">
+
+    <!-- Úvod -->
+    <section class="hero screen">
+      <div class="wrap hero__grid">
+        <div class="hero__text">
+          <span class="eyebrow">Specialista na Berounsko, Prahu a Kladno</span>
+          <h1>Prodám vaši nemovitost. <span class="hero__h1-sub">Spolehlivě a&nbsp;bez starostí.</span></h1>
+          <p class="hero__lead">Znám místní trh. Naše realitní kancelář působí na Berounsku od roku {site.domov.since}, a proto mám po ruce ověřené odborníky na všechno, co prodej obnáší, i kupující, kteří tu hledají bydlení.</p>
+          <div class="hero__actions">
+            <a class="btn btn--primary" href="/#kontakt" data-volba="Chci prodat">Chci prodat</a>
+            <a class="btn btn--dark" href="/#kontakt" data-volba="Ocenění zdarma">Ocenění zdarma</a>
+          </div>
+          <div class="hero__domov">
+            <div class="hero__domov-row">
+              <Picture src={domovLogo} widths={[200, 320]} sizes="130px" alt="Domov – realitní kancelář" class="hero__domov-logo" />
+              <p>Spolupracuji s<span class="hero__domov-full"> realitní kanceláří Domov Beroun.</span></p>
+            </div>
+            <div class="ratings">
+              <a class="rating" href={site.domovRating.url} target="_blank" rel="noopener" aria-label={`Hodnocení Domova na Googlu: ${site.domovRating.value} z 5, ${site.domovRating.count} recenzí`}>
+                <span class="rating__src">Google</span> <strong>{site.domovRating.value}</strong><span class="rating__star" aria-hidden="true"><Icon name="star" /></span> <span class="rating__n">({site.domovRating.count})</span>
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="hero__photo">
+          <Picture src={portrait} widths={[380, 560, 760, 917]} sizes="(max-width: 860px) 70vw, 400px" formats={['avif', 'webp']} alt="Jan Syblík, realitní makléř" loading="eager" fetchpriority="high" class="hero__portrait" />
+        </div>
+      </div>
+    </section>
+
+    <!-- Služby a jak prodávám -->
+    <section class="section screen theme-beige" id="sluzby" aria-labelledby="sluzby-h">
+      <div class="wrap svc">
+        <div class="svc__intro">
+          <span class="eyebrow">Služby</span>
+          <h2 id="sluzby-h">S čím vám pomohu</h2>
+          <div class="svc__cta">
+            <p class="svc__cta-line">Nevíte, kde začít? <a href={site.phoneHref}>Zavolejte mi.</a></p>
+          </div>
+        </div>
+        <ul class="svc__list">
+          {services.map((x) => (
+            <li class="svc__item">
+              <h3>{nadpisOdkazy[x.t] ? <a class="svc__h-link" href={nadpisOdkazy[x.t]}>{x.t}</a> : x.t}</h3>
+              <p>{x.t === 'Prodej nemovitosti' ? sOdkazy(x.d).map((y) => y.href ? <a class="svc__text-link" href={y.href}>{y.text}</a> : y.text) : x.d}{x.link && <> <a class="tile__link" href="/#kontakt" data-volba={x.link.volba}>{x.link.text} <Icon name="arrow" /></a></>}</p>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+
+    <!-- Nabídka: jeden posuvný řádek -->
+    {listings.length > 0 && <section class="section section--soft strip" id="nabidky" aria-labelledby="nabidky-h">
+      <div class="wrap">
+        <div class="strip__head">
+          <div>
+            <span class="eyebrow">Aktuální nabídka</span>
+            <h2 id="nabidky-h">Nemovitosti, které právě prodávám</h2>
+          </div>
+          <div class="strip__tools">
+            <a class="link-more" href={site.domov.profile} target="_blank" rel="noopener">Více na domov-beroun.cz <Icon name="external" /></a>
+            <div class="carousel__nav" data-carousel-nav hidden>
+              <button type="button" class="carousel__btn" data-dir="-1" aria-label="Předchozí nemovitosti"><Icon name="left" /></button>
+              <button type="button" class="carousel__btn" data-dir="1" aria-label="Další nemovitosti"><Icon name="right" /></button>
+            </div>
+          </div>
+        </div>
+        <ul class="listings" data-carousel>
+          {listings.map((l) => (
+            <li>
+              <a class="listing" href={l.url} target="_blank" rel="noopener">
+                <div class="listing__img">
+                  {l.image && <img src={l.image} alt="" width="600" height="450" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.remove()" />}
+                  {l.reserved && <span class="ribbon">Rezervace</span>}
+                </div>
+                <div class="listing__body">
+                  {l.location && <span class="listing__loc"><Icon name="pin" />{l.location.replace(/^okr\.\s*/, 'okr. ')}</span>}
+                  <h3>{l.title}</h3>
+                  <span class="listing__price">{l.price}</span>
+                </div>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>}
+
+    <!-- Recenze (zobrazí se, až budou v src/data/recenze.js) -->
+    {recenze.length > 0 && <section class="section theme-beige strip" id="recenze" aria-labelledby="recenze-h">
+      <div class="wrap">
+        <div class="strip__head">
+          <div>
+            <span class="eyebrow">Recenze</span>
+            <h2 id="recenze-h">Co říkají klienti</h2>
+          </div>
+          <a class="link-more" href={site.domovRating.url} target="_blank" rel="noopener">Všechny recenze na Googlu <Icon name="external" /></a>
+        </div>
+        <ul class="reviews">
+          {recenze.slice(0, 3).map((r) => (
+            <li class="review">
+              <span class="rating__stars" aria-label="5 z 5 hvězd"><Icon name="star" /><Icon name="star" /><Icon name="star" /><Icon name="star" /><Icon name="star" /></span>
+              <blockquote>{r.text}</blockquote>
+              <p class="review__who">{r.jmeno}{r.misto && `, ${r.misto}`}</p>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>}
+
+    <!-- O mně -->
+    <section class="section screen theme-white" id="o-mne" aria-labelledby="omne-h">
+      <div class="wrap about">
+        <div class="about__text">
+          <span class="eyebrow">O mně</span>
+          <h2 id="omne-h">Makléř, na kterého se můžete spolehnout</h2>
+          <p>Okolo nemovitostí se pohybuji celý život a dobře znám i jejich technickou stránku. Při prodeji proto vím, na co se dívat a na co se kupující budou ptát.</p>
+          <p>Ke každému prodeji přistupuji individuálně. Nejvíc mě baví složité případy – když do sebe nakonec všechno zapadne a všichni jsou spokojení.</p>
+          <a class="btn btn--primary" href="/#kontakt">Domluvit nezávaznou schůzku <Icon name="arrow" /></a>
+        </div>
+        <ul class="reasons">
+          {reasons.map((r) => (
+            <li class="reason">
+              <div><h3>{r.t}</h3><p>{r.d}</p></div>
+            </li>
+          ))}
+          <li class="reason">
+            <div>
+              <h3>Kde prodávám</h3>
+              <p class="reason__areas">{oblasti.map((o, i) => <>{i > 0 && ', '}{o.hotovo ? <a href={o.url}>{o.nazev}</a> : o.nazev}</>)} a okolí.</p>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Časté dotazy -->
+    <section class="section theme-beige" id="dotazy" aria-labelledby="faq-h">
+      <div class="wrap">
+        <div class="section-head">
+          <span class="eyebrow">Časté dotazy</span>
+          <h2 id="faq-h">Na co se prodávající nejčastěji ptají</h2>
+        </div>
+        <div class="faq faq-wrap">
+          {faq.map((f, i) => (
+            <details class="faq__item">
+              <summary><h3>{f.q}</h3><span class="faq__plus" aria-hidden="true"></span></summary>
+              <p>{f.a}</p>
+            </details>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- Kontakt -->
+    <section class="section screen theme-white contact-sec" id="kontakt" aria-labelledby="kontakt-h">
+      <div class="wrap contact">
+        <div class="contact__text">
+          <span class="eyebrow">Kontakt</span>
+          <h2 id="kontakt-h">Napište mi k&nbsp;vaší nemovitosti</h2>
+          <p>Vyplňte pár údajů a ozvu se vám, obvykle do 24 hodin. Poptávka je nezávazná.</p>
+          <ul class="contact__list">
+            <li><Icon name="phone" /><a href={site.phoneHref}>{site.phone}</a></li>
+            <li><Icon name="mail" /><a href={`mailto:${site.email}`}>{site.email}</a></li>
+          </ul>
+        </div>
+        <ContactForm />
+      </div>
+    </section>
+
+  </main>
+  <Footer />
+  <MobileBar />
+</Base>
+
+<script is:inline>
+  // Aktuální nabídka: posun šipkami; šipky se schovají, když se vše vejde.
+  (function () {
+    var track = document.querySelector('[data-carousel]'); if (!track) return;
+    var nav = document.querySelector('[data-carousel-nav]');
+    var btns = nav.querySelectorAll('button');
+    function update() {
+      var over = track.scrollWidth > track.clientWidth + 4;
+      nav.hidden = !over;
+      btns[0].disabled = track.scrollLeft < 4;
+      btns[1].disabled = track.scrollLeft + track.clientWidth > track.scrollWidth - 4;
+    }
+    btns.forEach(function (b) {
+      b.addEventListener('click', function () {
+        var card = track.querySelector('li');
+        var step = card ? card.getBoundingClientRect().width + 20 : track.clientWidth;
+        track.scrollBy({ left: step * Number(b.dataset.dir), behavior: 'smooth' });
+      });
+    });
+    track.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', update);
+    update();
+  })();
+</script>
+
+<style>
+  /* Sekce na jednu obrazovku: na počítači vždy aspoň výška okna (bez hlavičky), obsah uprostřed. */
+  @media (min-width: 861px) {
+    .screen { min-height: calc(100svh - 76px); display: flex; flex-direction: column; justify-content: center; }
+    .screen > .wrap { width: 100%; }
+    .section.screen { padding: clamp(40px, 5vh, 64px) 0; }
+  }
+  /* Počítač: stejný vzdušný prostor nad i pod sekcemi jako v O mně */
+  @media (min-width: 861px) {
+    #nabidky, #o-mne { padding-top: 96px; padding-bottom: 96px; }
+    #sluzby { padding-top: clamp(40px, 7vh, 96px); padding-bottom: clamp(40px, 7vh, 96px); }
+    #dotazy { padding-top: clamp(40px, 12vh, 96px); padding-bottom: clamp(40px, 12vh, 96px); }
+    #sluzby .svc__item { padding: 10px 14px; }
+    #sluzby .svc__item h3 { font-size: 16px; }
+    #sluzby .svc__item p { font-size: 14.5px; line-height: 1.5; }
+    section.hero { padding-top: clamp(40px, 7vh, 72px); padding-bottom: clamp(36px, 6vh, 80px); }
+    section.hero h1 { font-size: clamp(34px, 3.9vw, 50px); }
+    section.hero .hero__domov { padding-bottom: 0; }
+    section.hero .hero__photo { padding-top: 0; }
+    section.hero .hero__photo :global(.hero__portrait) { max-height: min(560px, calc(100svh - 170px)); }
+    #dotazy .faq__item summary { padding: 14px 0; }
+  }
+  .section-head { margin-bottom: clamp(24px, 3.5vh, 40px); }
+
+  /* Úvod */
+  .hero { position: relative; overflow: hidden; background: #ffffff; color: #111; padding: clamp(24px, 4vh, 56px) 0 0; }
+  .hero .eyebrow { color: #595959; }
+  .hero h1 { font-size: clamp(34px, 4.4vw, 54px); }
+  .hero :global(.btn--dark) { border-color: #111; color: #111; background: transparent; }
+  .hero :global(.btn--dark:hover) { background: #111; color: #fff; }
+  .hero__grid { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr); gap: clamp(32px, 6vw, 80px); align-items: end; }
+  .hero__text { display: grid; gap: 20px; justify-items: start; align-self: center; }
+  .hero__h1-sub { display: block; font-weight: 500; color: #3a3a3a; }
+  .hero__lead { font-size: clamp(17px, 1.5vw, 19px); color: #3a3a3a; max-width: 560px; }
+  .hero__actions { display: flex; flex-wrap: wrap; gap: 12px; }
+  .hero__domov { display: grid; gap: 18px; justify-items: start; margin-top: 8px; padding: 22px 0 clamp(24px, 4vh, 48px); border-top: 1px solid #dcdcd8; font-size: 14px; }
+  .hero__domov-row { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 20px; }
+  .hero__domov :global(img) { width: 120px; }
+  .hero__domov p { color: #2b2b2b; font-weight: 600; }
+  .ratings { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 6px 14px; padding-left: 39px; } /* zarovnáno s nápisem DOMOV v logu */
+  .ratings__sep { color: #9a9a9a; }
+  .rating { display: inline-flex; align-items: center; gap: 4px; text-decoration: none; color: #111; white-space: nowrap; font-size: 14px; }
+  .rating strong { font-size: 15px; }
+  .rating__star { display: inline-flex; color: #f5b400; }
+  .rating__star :global(svg) { width: 15px; height: 15px; }
+  .rating__src { color: #3a3a3a; font-weight: 600; }
+  .rating__n { color: #6a6a6a; }
+  .rating:hover .rating__src { text-decoration: underline; }
+  .hero__photo { position: relative; display: flex; justify-content: center; align-items: flex-end; padding-top: 16px; }
+  .hero__photo :global(.hero__portrait) { -webkit-mask-image: linear-gradient(to bottom, #000 80%, transparent 100%); mask-image: linear-gradient(to bottom, #000 80%, transparent 100%); width: auto; max-width: 100%; height: auto; max-height: min(560px, calc(100svh - 150px)); display: block; }
+
+  /* Služby: čistý seznam s linkami */
+  .svc { display: grid; grid-template-columns: minmax(0, .62fr) minmax(0, 1.38fr); gap: clamp(32px, 5vw, 72px); align-items: stretch; }
+  .svc__intro { display: flex; flex-direction: column; gap: 16px; padding: 28px 0 32px; }
+  .svc__intro > p { color: var(--muted); font-size: 18px; }
+  .svc__cta { margin-top: auto; padding-top: 18px; }
+  .svc__cta-line { font-size: 18px; font-weight: 600; }
+  .svc__cta-line a { display: block; color: var(--cobalt); text-decoration: none; }
+  .svc__cta-line a:hover { color: var(--cobalt-dark); }
+  .svc__list { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line); }
+  .svc__item { display: grid; grid-template-columns: minmax(190px, .42fr) 1fr; gap: 6px 24px; padding: 13px 14px; border-bottom: 1px solid var(--line); border-radius: 6px; transition: background .2s, transform .2s; }
+  .svc__item:hover { background: rgba(255,255,255,.7); transform: translateX(4px); }
+  /* Počítač: bez čáry nad první a pod poslední službou */
+  @media (min-width: 861px) { .svc__list { border-top: 0; } .svc__item:last-child { border-bottom: 0; } }
+  .svc__item h3 { font-size: 17px; line-height: 1.35; }
+  .svc__item p { color: var(--text-2); font-size: 15px; line-height: 1.55; }
+  .svc__h-link, .svc__text-link { color: inherit; text-decoration: underline; text-decoration-color: rgba(0,0,0,.28); text-underline-offset: 3px; }
+  .svc__h-link:hover, .svc__text-link:hover { color: var(--cobalt); text-decoration-color: var(--cobalt); }
+  .tile__link { display: inline-flex; align-items: center; gap: 6px; font-weight: 700; color: var(--cobalt); text-decoration: none; white-space: nowrap; }
+  .tile__link :global(svg) { width: 16px; height: 16px; }
+  .tile__link:hover { text-decoration: underline; }
+
+  /* Výzva na konci sekce */
+  .cta-line { margin-top: clamp(24px, 4vh, 40px); padding-top: 22px; border-top: 1px solid var(--line); display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px 20px; }
+  .cta-line p { font-size: clamp(17px, 1.7vw, 20px); font-weight: 600; }
+
+  /* Pruhové sekce (nabídka, recenze) */
+  .strip { padding: clamp(56px, 9vh, 96px) 0 clamp(64px, 11vh, 112px); }
+  .strip__head { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 16px 24px; margin-bottom: 24px; }
+  .strip__head > div:first-child { display: grid; gap: 12px; }
+  .strip__tools { display: flex; align-items: center; gap: 20px; }
+  .link-more { display: inline-flex; align-items: center; gap: 8px; font-weight: 700; text-decoration: none; border-bottom: 2px solid var(--text); padding-bottom: 2px; font-size: 15px; }
+  .link-more:hover { color: var(--accent); border-color: var(--accent); }
+  .link-more :global(svg) { width: 16px; height: 16px; }
+  .carousel__nav { display: flex; gap: 8px; }
+  .carousel__nav[hidden] { display: none; }
+  .carousel__btn { width: 44px; height: 44px; display: grid; place-items: center; border-radius: 50%; border: 1.5px solid var(--text-2); background: transparent; color: var(--text); cursor: pointer; transition: background .15s, color .15s, opacity .15s; }
+  .carousel__btn:hover:not(:disabled) { background: var(--text); color: var(--bg-2); }
+  .carousel__btn:disabled { opacity: .3; cursor: default; }
+  .carousel__btn :global(svg) { width: 20px; height: 20px; }
+  .listings { list-style: none; margin: 0; padding: 0; display: flex; gap: 20px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; }
+  .listings::-webkit-scrollbar { display: none; }
+  .listings > li { flex: 0 0 calc((100% - 60px) / 4); scroll-snap-align: start; }
+  .listing { display: flex; flex-direction: column; height: 100%; text-decoration: none; background: var(--panel); border-radius: 6px; overflow: hidden; border: 1px solid var(--line); transition: border-color .15s, transform .3s ease; }
+  .listing:hover { border-color: var(--accent); }
+  .listing:hover h3 { color: var(--accent); }
+  .listing__img { position: relative; aspect-ratio: 3 / 2; background: var(--panel-2); overflow: hidden; }
+  .listing__img img { width: 100%; height: 100%; object-fit: cover; transition: transform .5s ease; }
+  .listing:hover .listing__img img { transform: scale(1.05); }
+  .listing__body { display: grid; gap: 6px; padding: 16px 18px 18px; align-content: start; flex: 1; }
+  .listing__body h3 { font-size: 16px; line-height: 1.35; font-weight: 700; }
+  .listing__loc { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: var(--muted); font-weight: 600; }
+  .listing__loc :global(svg) { width: 15px; height: 15px; flex: none; }
+  .listing__price { font-size: 18px; font-weight: 800; letter-spacing: -0.01em; margin-top: auto; padding-top: 4px; }
+  /* Šikmá páska přes pravý horní roh u rezervovaných nemovitostí */
+  .ribbon { position: absolute; top: 26px; right: -46px; width: 190px; transform: rotate(45deg); background: #f5a512; color: #1b1b1b; text-align: center; font-size: 12px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; padding: 7px 0; box-shadow: 0 2px 8px rgba(0,0,0,.25); z-index: 1; pointer-events: none; }
+
+  /* Recenze */
+  .reviews { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+  .review { background: #fff; border-radius: 10px; padding: 24px; display: grid; gap: 12px; align-content: start; }
+  .review blockquote { margin: 0; color: var(--text-2); font-size: 15.5px; }
+  .review__who { font-weight: 700; font-size: 14px; }
+
+  /* O mně */
+  .about { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(32px, 6vw, 80px); align-items: center; }
+  .about__text { display: grid; gap: 18px; justify-items: start; }
+  .about__text p { color: var(--text-2); font-size: 17px; }
+  .reasons { list-style: none; margin: 0; padding: 0; display: grid; align-content: start; }
+  .reason { display: grid; grid-template-columns: 1fr; gap: 4px; padding: 22px 0; border-bottom: 1px solid var(--line); }
+  .reason__icon { width: 44px; height: 44px; border: 1.5px solid var(--text-2); border-radius: 50%; display: grid; place-items: center; }
+  .reason__icon :global(svg) { width: 20px; height: 20px; color: var(--accent); stroke-width: 2.4; }
+  .reason:first-child { padding-top: 0; }
+  .reason:last-child { border-bottom: 0; padding-bottom: 0; }
+  .reason p { color: var(--muted); margin-top: 4px; }
+  /* Počítač: nadpis nahoře, tlačítko dole */
+  @media (min-width: 861px) {
+    .about { align-items: stretch; }
+    .about__text { display: flex; flex-direction: column; align-items: flex-start; gap: 18px; }
+    .about__text .btn { margin-top: auto; }
+    .about { min-height: 360px; }
+    .reason { align-content: start; padding: 22px 0; }
+    .reason:last-child { padding-bottom: 0; }
+    .reason:first-child { align-content: start; padding: 0 0 22px; }
+  }
+
+  .reason__areas a { color: inherit; text-decoration: underline; text-decoration-color: rgba(0,0,0,.28); text-underline-offset: 3px; }
+  .reason__areas a:hover { color: var(--cobalt); text-decoration-color: var(--cobalt); }
+
+  /* Dotazy */
+  .faq-wrap { max-width: 900px; }
+  .faq { border-top: 1px solid var(--line); }
+  .faq__item { border-bottom: 1px solid var(--line); }
+  .faq__item summary { list-style: none; cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 20px; padding: 20px 0; }
+  .faq__item summary::-webkit-details-marker { display: none; }
+  .faq__item summary h3 { font-size: 18px; }
+  .faq__item summary:hover h3 { color: var(--accent); }
+  .faq__plus { position: relative; width: 18px; height: 18px; flex: none; }
+  .faq__plus::before, .faq__plus::after { content: ''; position: absolute; left: 0; top: 8px; width: 18px; height: 2px; background: var(--text); transition: transform .2s; }
+  .faq__plus::after { transform: rotate(90deg); }
+  .faq__item[open] .faq__plus::after { transform: rotate(0); }
+  .faq__item p { padding: 0 40px 22px 0; color: var(--text-2); }
+
+  /* Kontakt */
+  .contact { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: clamp(32px, 6vw, 80px); align-items: center; }
+  .contact__text { display: grid; gap: 18px; }
+  .contact__text > p { color: var(--text-2); font-size: 17px; }
+  .contact__list { list-style: none; margin: 8px 0 0; padding: 0; display: grid; gap: 14px; }
+  .contact__list li { display: flex; align-items: center; gap: 12px; }
+  .contact__list :global(svg) { width: 20px; height: 20px; color: var(--accent); flex: none; }
+  .contact__list a { color: var(--text); font-weight: 700; text-decoration: none; font-size: 18px; }
+  .contact-sec { --panel: #f7f5f1; --muted: #5a5a5a; }
+  .contact-sec :global(.form) { border-color: #e6e0d6; }
+  .contact-sec :global(.field input), .contact-sec :global(.field select), .contact-sec :global(.field textarea) { background: #ffffff; border-color: #d6cfc3; }
+  .contact-sec :global(.form__choice span) { background: #edf1fd; border-color: #c9d4f5; color: #3d4f8f; }
+  .contact-sec :global(.form__choice label:hover span) { border-color: #8fa3e6; color: #22357a; }
+  .contact-sec :global(.form__choice input:checked + span) { background: var(--cobalt); border-color: var(--cobalt); color: #fff; }
+  .contact-sec :global(.form__status[data-state='ok']) { background: #e3f5ea; color: #145a2f; }
+  .contact-sec :global(.form__status[data-state='error']) { background: #fbe6e6; color: #8a1c1c; }
+  .contact__list a:hover { text-decoration: underline; }
+
+  @media (prefers-reduced-motion: reduce) { .svc__item:hover { transform: none; } .listing:hover .listing__img img { transform: none; } }
+  @media (max-width: 1100px) {
+    .listings > li { flex-basis: calc((100% - 40px) / 3); }
+  }
+  @media (max-width: 980px) {
+    .reviews { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 860px) {
+    .hero__grid, .about, .contact { grid-template-columns: 1fr; }
+    .svc__intro { display: contents; }
+    .svc__intro > .eyebrow, .svc__intro > h2 { order: 0; }
+    .svc__list { order: 1; }
+    .svc__cta { order: 2; margin-top: 8px; padding-top: 0; }
+    .svc { gap: 16px; }
+    .ratings { padding-left: 0; }
+    .hero__photo { max-width: 240px; width: 100%; justify-self: center; order: -1; padding-top: 0; }
+    .hero__photo :global(.hero__portrait) { max-height: none; width: 100%; }
+    .svc { grid-template-columns: 1fr; }
+    .listings > li { flex-basis: calc((100% - 20px) / 2); }
+  }
+  @media (max-width: 600px) {
+    .svc__item { grid-template-columns: 1fr; padding: 14px 4px; }
+    .listings { margin: 0 calc(var(--gutter) * -1); padding: 0 var(--gutter) 4px; scroll-padding: 0 var(--gutter); gap: 14px; }
+    .listings > li { flex-basis: 82%; }
+    .strip__tools .carousel__nav { display: none; }
+    .hero__actions { width: 100%; }
+    .hero__actions .btn { flex: 1 1 100%; }
+    .faq__item p { padding-right: 0; }
+  }
+  /* Mobil – varianta A: fotka vedle nadpisu, Domov a hodnocení na střed */
+  @media (max-width: 860px) {
+    .hero { padding-top: 26px; }
+    .hero__grid { grid-template-columns: minmax(0, 1fr) 46%; grid-template-areas: "eye eye" "h1 photo" "lead lead" "domov domov" "act act"; gap: 14px 8px; }
+    .hero__text { display: contents; }
+    .hero .eyebrow { grid-area: eye; font-size: 11px; letter-spacing: .1em; gap: 10px; }
+    .hero h1 { grid-area: h1; font-size: clamp(25px, 7vw, 30px); align-self: start; margin-top: 22px; }
+    .hero__lead { grid-area: lead; margin-top: 18px; }
+    .hero__actions { grid-area: act; padding: 12px 0 32px; }
+    .hero__photo { grid-area: photo; order: 0; width: 100%; max-width: 210px; justify-self: end; align-self: start; padding: 0; }
+    .hero__photo :global(.hero__portrait) { width: 100%; max-height: none; -webkit-mask-image: linear-gradient(to bottom, #000 75%, transparent 100%); mask-image: linear-gradient(to bottom, #000 75%, transparent 100%); }
+    .hero__domov { grid-area: domov; justify-items: center; text-align: center; gap: 16px; margin-top: 14px; padding: 24px 0 26px; border-bottom: 1px solid #dcdcd8; }
+    .hero__domov-row { flex-wrap: nowrap; justify-content: center; gap: 14px; }
+    .hero__domov-row p { order: -1; font-size: 17px; font-weight: 400; color: #3a3a3a; }
+    .hero__domov-full { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+    .hero .ratings { padding-left: 0; justify-content: center; }
+  }
+</style>

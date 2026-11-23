@@ -1,0 +1,74 @@
+# Sestaví web a nahraje ho na GitHub Pages:
+# – po každé změně v kódu,
+# – každou noc ve 4:00 (aktualizuje nabídku nemovitostí z webu Domova),
+# – ručně tlačítkem "Run workflow" na záložce Actions.
+name: Nasazení webu
+
+on:
+  push:
+    branches: [main]
+  schedule:
+    - cron: '0 3 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    outputs:
+      nabidka_chyba: ${{ steps.kontrola.outputs.chyba }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Sestavení webu
+        run: npm run build 2>&1 | tee build.log
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+      - name: Udržet noční přestavbu aktivní (GitHub ji jinak po 60 dnech bez změn vypne)
+        if: github.event_name == 'schedule'
+        run: |
+          last=$(git log -1 --format=%ct); now=$(date +%s)
+          if [ $((now - last)) -gt $((50 * 86400)) ]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git commit --allow-empty -m "Udržení noční přestavby"
+            git push
+          fi
+      - name: Kontrola načtení nabídky z webu Domova
+        id: kontrola
+        run: |
+          if grep -q "\[nabídky\]" build.log; then echo "chyba=1" >> "$GITHUB_OUTPUT"; fi
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
+
+  # Když se nabídku nepodaří načíst, web se i tak nasadí (se zálohou),
+  # ale tento krok skončí chybou a GitHub pošle upozornění e-mailem.
+  upozorneni:
+    needs: [build, deploy]
+    if: needs.build.outputs.nabidka_chyba == '1'
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          echo "::error::Nabídku z webu Domova se nepodařilo načíst, na webu zůstala poslední uložená verze. Zkontrolujte stránku makléře na domov-beroun.cz."
+          exit 1

@@ -1,0 +1,43 @@
+---
+import Icon from './Icon.astro';
+import { site } from '../data/site.js';
+---
+<nav class="mbar is-hidden" aria-label="Rychlý kontakt">
+  <a class="mbar__call" href={site.phoneHref}><Icon name="phone" /> Zavolat</a>
+  <a class="mbar__cta" href="/#kontakt" data-volba="Ocenění zdarma">Ocenění zdarma</a>
+</nav>
+
+<style>
+  .mbar { display: none; }
+  @media (max-width: 720px) {
+    .mbar { display: grid; grid-template-columns: 1fr 1.3fr; gap: 8px; position: fixed; left: 0; right: 0; bottom: 0; z-index: 60; padding: 10px 12px calc(10px + env(safe-area-inset-bottom)); background: rgba(22,22,22,.97); border-top: 1px solid #2e2e2e; transition: transform .25s ease, visibility .25s; }
+    .mbar.is-hidden { transform: translateY(110%); visibility: hidden; }
+    .mbar a { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 48px; border-radius: var(--radius); font-weight: 700; font-size: 16px; text-decoration: none; }
+    .mbar :global(svg) { width: 18px; height: 18px; }
+    .mbar__call { border: 1.5px solid #e6e6e6; color: #fff; }
+    .mbar__cta { background: var(--cobalt); color: #fff; }
+    :global(body) { padding-bottom: calc(70px + env(safe-area-inset-bottom)); }
+  }
+</style>
+
+<script>
+  // Lišta se ukáže až po přejetí tlačítek v úvodu a schová se, když je vidět formulář.
+  const bar = document.querySelector('.mbar');
+  const heroBtns = document.querySelector('.hero__actions');
+  const form = document.querySelector('#kontakt form');
+  if (bar) {
+    let ticking = false;
+    const update = () => {
+      ticking = false;
+      const vh = window.innerHeight;
+      const pastHero = heroBtns ? heroBtns.getBoundingClientRect().bottom < 0 : window.scrollY > vh * 0.6;
+      let formVisible = false;
+      if (form) { const r = form.getBoundingClientRect(); formVisible = r.top < vh && r.bottom > 0; }
+      bar.classList.toggle('is-hidden', !pastHero || formVisible);
+    };
+    const onScroll = () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    update();
+  }
+</script>

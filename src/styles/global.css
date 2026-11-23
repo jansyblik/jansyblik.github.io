@@ -1,0 +1,92 @@
+@import '@fontsource-variable/manrope';
+
+/* Tmavý vzhled: grafitové pozadí, světlý text, kobaltový akcent z loga. */
+:root {
+  --bg: #1e1e1e;          /* základní pozadí stránky */
+  --bg-2: #252525;        /* střídavé sekce */
+  --bg-deep: #161616;     /* nejtmavší sekce (úvod, postup, kontakt, patička) */
+  --panel: #2b2b2b;       /* karty a bloky */
+  --panel-2: #333333;
+  --text: #f2f2f2;
+  --text-2: #d6d6d6;
+  --muted: #a6a6a6;
+  --line: #3a3a3a;
+  --cobalt: #2350e6;      /* tlačítka (bílý text) */
+  --cobalt-dark: #1a3dbd;
+  --accent: #7b97ff;      /* odkazy a ikony na tmavém pozadí */
+  --radius: 4px;
+  --wrap: 1180px;
+  --gutter: clamp(16px, 4vw, 32px);
+  --font: 'Manrope Variable', 'Manrope', system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+  color-scheme: dark;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 84px; -webkit-text-size-adjust: 100%; background: var(--bg); }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 17px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+img { max-width: 100%; height: auto; display: block; }
+a { color: inherit; }
+h1, h2, h3 { line-height: 1.15; letter-spacing: -0.02em; margin: 0; font-weight: 700; text-wrap: balance; }
+h1 { font-size: clamp(36px, 5.4vw, 60px); letter-spacing: -0.03em; }
+h2 { font-size: clamp(28px, 3.6vw, 42px); }
+h3 { font-size: 20px; letter-spacing: -0.01em; }
+p { margin: 0; text-wrap: pretty; }
+
+.wrap { width: 100%; max-width: var(--wrap); margin: 0 auto; padding: 0 var(--gutter); }
+.section { padding: clamp(64px, 9vw, 112px) 0; }
+.section--soft { background: var(--bg-2); }
+.section--ink { background: var(--bg-deep); }
+.eyebrow {
+  font-size: 13px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted);
+  display: inline-flex; align-items: center; gap: 10px;
+}
+.eyebrow::before { content: ''; width: 24px; height: 2px; background: var(--cobalt); }
+.section-head { display: grid; gap: 14px; max-width: 720px; margin-bottom: clamp(32px, 5vw, 56px); }
+.section-head p { color: var(--muted); font-size: 18px; }
+
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+  min-height: 52px; padding: 0 26px; border-radius: var(--radius);
+  font: inherit; font-weight: 700; font-size: 16px; text-decoration: none; cursor: pointer;
+  border: 1.5px solid transparent; transition: background .15s, color .15s, border-color .15s;
+}
+.btn--primary { background: var(--cobalt); color: #fff; }
+.btn--primary:hover { background: var(--cobalt-dark); }
+.btn--ghost, .btn--light { border-color: #e6e6e6; color: #fff; background: transparent; }
+.btn--ghost:hover, .btn--light:hover { background: #fff; color: #111; }
+.btn svg { width: 18px; height: 18px; flex: none; }
+
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+.skip { position: absolute; left: -9999px; top: 8px; background: #fff; color: #111; padding: 8px 14px; z-index: 100; }
+.skip:focus { left: 8px; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } * { transition: none !important; } }
+
+/* Světlé sekce: přepíší barvy jen uvnitř sebe, všechno ostatní se přizpůsobí samo. */
+.theme-light, .theme-white {
+  --text: #111111;
+  --text-2: #2f2f2f;
+  --muted: #5a5a5a;
+  --line: #dcdcd8;
+  --panel: #ffffff;
+  --panel-2: #ececea;
+  --accent: #2350e6;
+  --step-bg: #ffffff;
+  color: var(--text);
+  color-scheme: light;
+}
+.theme-light { background: #f2f2ef; }
+.theme-white { background: #ffffff; }
+.theme-light .btn--ghost, .theme-white .btn--ghost { border-color: #111; color: #111; }
+.theme-light .btn--ghost:hover, .theme-white .btn--ghost:hover { background: #111; color: #fff; }
+.theme-beige { background: #f1ede6; --line: #ddd6cb; --text: #111111; --text-2: #2f2f2f; --muted: #5a5a5a; --accent: #2350e6; color: var(--text); color-scheme: light; }

@@ -1,0 +1,82 @@
+---
+import { site } from '../data/site.js';
+const enabled = Boolean(site.gaId || site.googleAdsId || site.sklikRetargetingId || site.sklikConversionId);
+const cfg = {
+  ads: site.googleAdsId,
+  adsLabel: site.googleAdsLeadLabel,
+  sklikRtg: site.sklikRetargetingId,
+  sklikConv: site.sklikConversionId,
+};
+---
+{enabled && (
+  <div class="consent" id="consent" role="dialog" aria-live="polite" aria-label="Nastavení cookies" hidden>
+    <p>
+      Web používá cookies pro měření návštěvnosti a vyhodnocení reklamy. Nezbytné cookies fungují vždy, ostatní
+      jen s vaším souhlasem. <a href="/ochrana-osobnich-udaju/">Více informací</a>
+    </p>
+    <div class="consent__actions">
+      <button type="button" class="btn btn--ghost" data-consent="necessary">Jen nezbytné</button>
+      <button type="button" class="btn btn--primary" data-consent="all">Přijmout vše</button>
+    </div>
+  </div>
+)}
+
+<script is:inline define:vars={{ cfg, enabled }}>
+  (function () {
+    var KEY = 'jansyblik-consent-v1';
+    var granted = false;
+    function read() { try { return localStorage.getItem(KEY); } catch (e) { return null; } }
+    function write(v) { try { localStorage.setItem(KEY, v); } catch (e) {} }
+    function loadSklik() {
+      if (!cfg.sklikRtg && !cfg.sklikConv) return;
+      if (window.__sklikLoaded) return; window.__sklikLoaded = true;
+      var s = document.createElement('script'); s.async = true; s.src = 'https://c.seznam.cz/js/rc.js';
+      s.onload = function () {
+        try {
+          if (window.sznIVA && window.sznIVA.IS) window.sznIVA.IS.updateIdentities({ eid: null });
+          if (cfg.sklikRtg && window.rc) window.rc.retargetingHit({ rtgId: Number(cfg.sklikRtg), consent: 1 });
+        } catch (e) {}
+      };
+      document.head.appendChild(s);
+    }
+    function apply(choice) {
+      granted = choice === 'all';
+      if (window.gtag) {
+        var v = granted ? 'granted' : 'denied';
+        window.gtag('consent', 'update', { ad_storage: v, ad_user_data: v, ad_personalization: v, analytics_storage: v });
+      }
+      if (granted) loadSklik();
+    }
+    // Volá se po odeslání formuláře: konverze pro Google Ads, Sklik a událost pro Analytics.
+    window.trackLead = function (kind) {
+      try {
+        if (window.gtag) {
+          window.gtag('event', 'generate_lead', { form_type: kind || 'oceneni' });
+          if (cfg.ads && cfg.adsLabel) window.gtag('event', 'conversion', { send_to: cfg.ads + '/' + cfg.adsLabel });
+        }
+        if (granted && cfg.sklikConv && window.rc) window.rc.conversionHit({ id: Number(cfg.sklikConv), value: null, consent: 1 });
+      } catch (e) {}
+    };
+    var box = document.getElementById('consent');
+    window.openConsent = function () { if (box) box.hidden = false; };
+    if (!enabled) return;
+    var saved = read();
+    if (saved) apply(saved); else if (box) box.hidden = false;
+    if (box) box.addEventListener('click', function (e) {
+      var b = e.target.closest('[data-consent]'); if (!b) return;
+      var c = b.getAttribute('data-consent'); write(c); apply(c); box.hidden = true;
+    });
+  })();
+</script>
+
+<style>
+  .consent {
+    position: fixed; z-index: 60; left: 16px; right: 16px; bottom: 16px; margin: 0 auto; max-width: 760px;
+    background: var(--panel); color: var(--text); border: 1px solid var(--line); border-radius: 6px;
+    box-shadow: 0 12px 40px rgba(0,0,0,.14); padding: 20px; display: grid; gap: 16px; font-size: 15px;
+  }
+  .consent[hidden] { display: none; }
+  .consent a { color: var(--accent); }
+  .consent__actions { display: flex; flex-wrap: wrap; gap: 10px; justify-content: flex-end; }
+  .consent__actions .btn { min-height: 44px; padding: 0 18px; font-size: 15px; }
+</style>
