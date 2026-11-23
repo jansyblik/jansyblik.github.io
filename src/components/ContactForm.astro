@@ -51,8 +51,7 @@ const endpoint = site.formspreeId ? `https://formspree.io/f/${site.formspreeId}`
 
   <button type="submit" class="btn btn--primary form__submit">Odeslat nezávazně</button>
   <p class="form__legal">
-    Údaje použiji jen k vyřízení poptávky.
-    <a href="/ochrana-osobnich-udaju/">Ochrana osobních údajů</a>
+    Údaje použiji jen k vyřízení poptávky.&nbsp;<a href="/ochrana-osobnich-udaju/">Ochrana osobních údajů</a>
   </p>
   <p class="form__status" role="status" aria-live="polite"></p>
 </form>
@@ -87,7 +86,7 @@ const endpoint = site.formspreeId ? `https://formspree.io/f/${site.formspreeId}`
           var kind = (form.querySelector('[name="Požadavek"]:checked') || {}).value;
           if (window.trackLead) window.trackLead(kind === 'Chci prodat' ? 'prodej' : 'oceneni');
           form.reset();
-          say('Děkuji, poptávka dorazila. Ozvu se vám do 24 hodin, obvykle mnohem dřív.', true);
+          say('Děkuji za vaši poptávku. Ozvu se vám do 24 hodin.', true);
         })
         .catch(function () { say('Odeslání se nepovedlo. Zkuste to prosím znovu, nebo mi zavolejte.', false); })
         .finally(function () { btn.disabled = false; btn.textContent = 'Odeslat nezávazně'; });
