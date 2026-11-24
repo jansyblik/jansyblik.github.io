@@ -462,18 +462,18 @@ const faqLd = {
     .hero__actions .btn { flex: 1 1 100%; }
     .faq__item p { padding-right: 0; }
   }
-  /* Mobil – varianta A: fotka vedle nadpisu, Domov a hodnocení na střed */
+  /* Mobil: velká fotka vedle nadpisu, pod ní Domov a hodnocení, tlačítka, pak úvodní text */
   @media (max-width: 860px) {
     .hero { padding-top: 26px; }
-    .hero__grid { grid-template-columns: minmax(0, 1fr) 46%; grid-template-areas: "eye eye" "h1 photo" "lead lead" "domov domov" "act act"; gap: 14px 8px; }
+    .hero__grid { grid-template-columns: minmax(0, 1fr) 58%; grid-template-areas: "eye eye" "h1 photo" "domov domov" "act act" "lead lead"; gap: 14px 0; }
     .hero__text { display: contents; }
     .hero .eyebrow { grid-area: eye; font-size: 11px; letter-spacing: .1em; gap: 10px; }
-    .hero h1 { grid-area: h1; font-size: clamp(25px, 7vw, 30px); align-self: start; margin-top: 22px; }
-    .hero__lead { grid-area: lead; margin-top: 18px; }
-    .hero__actions { grid-area: act; padding: 12px 0 32px; }
-    .hero__photo { grid-area: photo; order: 0; width: 100%; max-width: 210px; justify-self: end; align-self: start; padding: 0; }
+    .hero h1 { grid-area: h1; font-size: clamp(24px, 7.2vw, 28px); align-self: start; margin-top: 28px; position: relative; z-index: 1; }
+    .hero__lead { grid-area: lead; margin: 0 0 30px; font-size: 16px; color: #555; text-align: center; }
+    .hero__actions { grid-area: act; padding: 16px 0 18px; }
+    .hero__photo { grid-area: photo; order: 0; width: calc(100% + var(--gutter)); max-width: none; margin-right: calc(var(--gutter) * -1); justify-self: stretch; align-self: start; padding: 0; }
     .hero__photo :global(.hero__portrait) { width: 100%; max-height: none; -webkit-mask-image: linear-gradient(to bottom, #000 75%, transparent 100%); mask-image: linear-gradient(to bottom, #000 75%, transparent 100%); }
-    .hero__domov { grid-area: domov; justify-items: center; text-align: center; gap: 16px; margin-top: 14px; padding: 24px 0 26px; border-bottom: 1px solid #dcdcd8; }
+    .hero__domov { grid-area: domov; justify-items: center; text-align: center; gap: 16px; margin-top: 0; padding: 20px 0 26px; border-bottom: 1px solid #dcdcd8; }
     .hero__domov-row { flex-wrap: nowrap; justify-content: center; gap: 14px; }
     .hero__domov-row p { order: -1; font-size: 17px; font-weight: 400; color: #3a3a3a; }
     .hero__domov-full { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
