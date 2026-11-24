@@ -5,7 +5,7 @@ export const site = {
   role: 'realitní makléř',
   title: 'Jan Syblík – realitní makléř | Berounsko, Praha a Kladno',
   description:
-    'Jan Syblík, realitní makléř spolupracující s realitní kanceláří Domov Beroun. Prodám váš byt, dům nebo pozemek v Berouně, Kladně, Praze a na Hořovicku rychle a za tržní cenu. Ocenění nemovitosti zdarma.',
+    'Jan Syblík, realitní makléř spolupracující s realitní kanceláří Domov Beroun. Prodám váš byt, dům nebo pozemek v Berouně, Kladně, Praze a na Hořovicku rychle a bez starostí. Ocenění nemovitosti zdarma.',
   phone: '+420 603 363 935',
   phoneShort: '603 363 935',
   phoneHref: 'tel:+420603363935',
