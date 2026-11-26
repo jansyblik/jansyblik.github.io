@@ -12,7 +12,7 @@ export const site = {
   email: 'syblik@domov-beroun.cz',
   areas: ['Berounsko', 'Praha'],
   // Hodnocení realitní kanceláře Domov na Googlu (ručně ověřeno 21. 11. 2026, aktualizovat občas)
-  domovRating: { value: '4,8', count: 108, url: 'https://g.page/r/Cc0NsCLl9E3CEB0' },
+  domovRating: { value: '4,8', count: 115, url: 'https://g.page/r/Cc0NsCLl9E3CEB0' },
   domov: {
     name: 'Domov – realitní společnost s.r.o.',
     shortName: 'realitní kancelář Domov',
