@@ -462,16 +462,16 @@ const faqLd = {
     .hero__actions .btn { flex: 1 1 100%; }
     .faq__item p { padding-right: 0; }
   }
-  /* Mobil: nadpis vedle velké fotky, pod nadpisem logo Domova a hodnocení, pak úvodní text a tlačítka */
+  /* Mobil: nahoře „Specialista na…“, pod tím nadpis vedle velké fotky, pod nadpisem logo Domova a hodnocení, pak úvodní text a tlačítka */
   @media (max-width: 860px) {
     .hero { padding-top: 26px; }
-    .hero__grid { grid-template-columns: minmax(0, 1fr) 58%; grid-template-areas: "h1 photo" "domov photo" "lead lead" "act act"; grid-template-rows: auto 1fr auto auto; gap: 14px 0; }
+    .hero__grid { grid-template-columns: minmax(0, 1fr) 58%; grid-template-areas: "eye eye" "h1 photo" "domov photo" "lead lead" "act act"; grid-template-rows: auto auto 1fr auto auto; gap: 14px 0; }
     .hero__text { display: contents; }
-    .hero .eyebrow { display: none; }
-    .hero h1 { grid-area: h1; font-size: clamp(22px, 6.4vw, 25px); align-self: start; margin-top: 40px; position: relative; z-index: 1; }
-    .hero__lead { grid-area: lead; margin: 8px 0 0; padding-top: 20px; border-top: 1px solid #dcdcd8; font-size: 16px; color: #3a3a3a; text-align: left; }
+    .hero .eyebrow { grid-area: eye; font-size: 11px; letter-spacing: .1em; gap: 10px; }
+    .hero h1 { grid-area: h1; font-size: clamp(22px, 6.4vw, 25px); align-self: start; margin-top: 28px; position: relative; z-index: 1; }
+    .hero__lead { grid-area: lead; margin: 30px 0 0; padding-top: 20px; border-top: 1px solid #dcdcd8; font-size: 16px; color: #3a3a3a; text-align: left; }
     .hero__actions { grid-area: act; padding: 18px 0 30px; }
-    .hero__photo { grid-area: photo; grid-row: 1 / span 2; order: 0; width: calc(100% + var(--gutter)); max-width: none; margin-right: calc(var(--gutter) * -1); justify-self: stretch; align-self: start; padding: 0; }
+    .hero__photo { grid-area: photo; grid-row: 2 / span 2; order: 0; width: calc(100% + var(--gutter)); max-width: none; margin-right: calc(var(--gutter) * -1); justify-self: stretch; align-self: start; padding: 0; }
     .hero__photo :global(.hero__portrait) { width: 100%; max-height: none; -webkit-mask-image: linear-gradient(to bottom, #000 75%, transparent 100%); mask-image: linear-gradient(to bottom, #000 75%, transparent 100%); }
     .hero__domov { grid-area: domov; justify-items: start; text-align: left; align-self: start; gap: 8px; margin: 0; padding: 30px 0 0; border: 0; }
     .hero__domov-row { flex-direction: column; flex-wrap: nowrap; align-items: flex-start; gap: 4px; }
