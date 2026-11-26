@@ -25,7 +25,7 @@ export const site = {
   // Formspree: ID formuláře, např. 'xyzabcd' z adresy https://formspree.io/f/xyzabcd
   formspreeId: 'mbgozjgb',
   // Google Analytics 4: měřicí ID, např. 'G-XXXXXXXXXX'
-  gaId: '',
+  gaId: 'G-68KLCFSSH2',
   // Google Ads: ID konverze, např. 'AW-123456789', a štítek konverze pro odeslání formuláře
   googleAdsId: '',
   googleAdsLeadLabel: '',

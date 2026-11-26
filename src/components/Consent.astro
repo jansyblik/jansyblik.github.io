@@ -11,8 +11,7 @@ const cfg = {
 {enabled && (
   <div class="consent" id="consent" role="dialog" aria-live="polite" aria-label="Nastavení cookies" hidden>
     <p>
-      Web používá cookies pro měření návštěvnosti a vyhodnocení reklamy. Nezbytné cookies fungují vždy, ostatní
-      jen s vaším souhlasem. <a href="/ochrana-osobnich-udaju/">Více informací</a>
+      Používám cookies k měření návštěvnosti. Nezbytné fungují vždy, ostatní jen s&nbsp;vaším souhlasem.&nbsp;<a href="/ochrana-osobnich-udaju/">Více</a>
     </p>
     <div class="consent__actions">
       <button type="button" class="btn btn--ghost" data-consent="necessary">Jen nezbytné</button>
@@ -70,13 +69,23 @@ const cfg = {
 </script>
 
 <style>
+  /* Nenápadná lišta dole: jeden řádek na počítači, dva na mobilu. */
   .consent {
-    position: fixed; z-index: 60; left: 16px; right: 16px; bottom: 16px; margin: 0 auto; max-width: 760px;
-    background: var(--panel); color: var(--text); border: 1px solid var(--line); border-radius: 6px;
-    box-shadow: 0 12px 40px rgba(0,0,0,.14); padding: 20px; display: grid; gap: 16px; font-size: 15px;
+    position: fixed; z-index: 70; left: 0; right: 0; bottom: 0;
+    background: rgba(22,22,22,.97); color: #e9e9e9; border-top: 1px solid #2e2e2e;
+    padding: 10px max(16px, env(safe-area-inset-left)) calc(10px + env(safe-area-inset-bottom));
+    display: flex; align-items: center; justify-content: center; gap: 10px 20px; flex-wrap: wrap;
+    font-size: 13.5px; line-height: 1.45;
   }
   .consent[hidden] { display: none; }
-  .consent a { color: var(--accent); }
-  .consent__actions { display: flex; flex-wrap: wrap; gap: 10px; justify-content: flex-end; }
-  .consent__actions .btn { min-height: 44px; padding: 0 18px; font-size: 15px; }
+  .consent p { margin: 0; max-width: 640px; }
+  .consent a { color: #fff; text-decoration: underline; text-underline-offset: 2px; }
+  .consent__actions { display: flex; gap: 8px; flex-shrink: 0; }
+  .consent__actions .btn { min-height: 36px; padding: 0 14px; font-size: 14px; }
+  .consent :global(.btn--ghost) { color: #fff; border-color: #5a5a5a; background: transparent; }
+  @media (max-width: 600px) {
+    .consent { justify-content: stretch; padding-top: 12px; }
+    .consent__actions { width: 100%; }
+    .consent__actions .btn { flex: 1 1 0; justify-content: center; }
+  }
 </style>
